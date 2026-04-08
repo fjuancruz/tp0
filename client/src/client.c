@@ -13,7 +13,7 @@ int main(void)
 	t_config* config;
 
 	/* ---------------- LOGGING ---------------- */
-
+	/* Verifico cambio */
 	logger = iniciar_logger();
 
 	// Usando el logger creado previamente
