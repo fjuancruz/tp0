@@ -36,19 +36,21 @@ int main(void)
 
 	/* ---------------- LEER DE CONSOLA ---------------- */
 
-	leer_consola(logger);
+	//leer_consola(logger);
 
 	/*---------------------------------------------------PARTE 3-------------------------------------------------------------*/
 
 	// ADVERTENCIA: Antes de continuar, tenemos que asegurarnos que el servidor esté corriendo para poder conectarnos a él
-
+	ip = config_get_string_value(config, "IP");
+	puerto = config_get_string_value(config, "PUERTO");
 	// Creamos una conexión hacia el servidor
-	// conexion = crear_conexion(ip, puerto);
+	conexion = crear_conexion(ip, puerto);
+	enviar_mensaje(valor, conexion);
 
 	// Enviamos al servidor el valor de CLAVE como mensaje
 
 	// Armamos y enviamos el paquete
-	// paquete(conexion);
+	paquete(conexion);
 
 	terminar_programa(conexion, logger, config);
 
@@ -100,12 +102,24 @@ void paquete(int conexion)
 {
 	// Ahora toca lo divertido!
 	char* leido;
-	t_paquete* paquete;
+	t_paquete* paquete = crear_paquete();
+
+	leido = readline("> ");
 
 	// Leemos y esta vez agregamos las lineas al paquete aa
-
+	while(leido != NULL && strcmp(leido, "") != 0)
+	{
+		agregar_a_paquete(paquete, leido, strlen(leido) + 1);
+		free(leido);
+		leido = readline("> ");
+	}
 
 	// ¡No te olvides de liberar las líneas y el paquete antes de regresar!
+	if(leido != NULL)
+		free(leido);
+
+	enviar_paquete(paquete, conexion);
+	eliminar_paquete(paquete);
 	
 }
 
